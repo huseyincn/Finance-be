@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import yahoofinance.YahooFinance;
-import yahoofinance.quotes.fx.FxQuote;
 
 @SpringBootApplication
 @EnableScheduling
@@ -25,11 +23,11 @@ public class FinancePortfolioApplication {
 
     @Scheduled(fixedRate = 5000)
     public void sendRandomNumber() {
-        try {
-            FxQuote usdgbp = YahooFinance.getFx("USDGBP=X");
-            template.convertAndSend("/topic/messages", usdgbp);
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
+//        try {
+//            FxQuote usdgbp = YahooFinance.getFx("USDGBP=X");
+//            template.convertAndSend("/topic/messages", usdgbp);
+//        } catch (Exception e) {
+//            log.error(e.toString());
+//        }
     }
 }

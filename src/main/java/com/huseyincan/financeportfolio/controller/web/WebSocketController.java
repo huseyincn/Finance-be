@@ -1,4 +1,4 @@
-package com.huseyincan.financeportfolio.web.controller;
+package com.huseyincan.financeportfolio.controller.web;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
