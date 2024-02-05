@@ -1,7 +1,7 @@
 package com.huseyincan.financeportfolio.controller.rest;
 
 import com.huseyincan.financeportfolio.exception.EmailExistsException;
-import com.huseyincan.financeportfolio.service.UserService;
+import com.huseyincan.financeportfolio.service.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

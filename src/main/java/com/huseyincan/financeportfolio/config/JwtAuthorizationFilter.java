@@ -1,6 +1,6 @@
 package com.huseyincan.financeportfolio.config;
 
-import com.huseyincan.financeportfolio.service.TokenManager;
+import com.huseyincan.financeportfolio.service.jwt.TokenManager;
 import com.huseyincan.financeportfolio.util.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

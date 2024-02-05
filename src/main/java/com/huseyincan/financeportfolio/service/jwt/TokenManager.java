@@ -1,15 +1,14 @@
-package com.huseyincan.financeportfolio.service;
+package com.huseyincan.financeportfolio.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+
+import static io.jsonwebtoken.Jwts.SIG.HS512;
 
 @Service
 public class TokenManager {
@@ -17,23 +16,14 @@ public class TokenManager {
 
     private SecretKey key;
 
-    @Value("#{${token.expire.minute : 5} * 60 * 1000}")
+    @Value("${application.token.duration}")
     private int expireTime;
-    /**
-     * Constructor injection ile environment'ı servisimize bağımlılık olarak ekliyoruz.
-     * Bu sayede propertyler üzerinden bazı değerleri parametrik olarak alabileceğiz.
-     *
-     * @param key
-     * @param expireTime
-     */
 
     public TokenManager() {
-        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        this.key = HS512.key().build();
     }
 
     /**
-     * Json Web Token ile ilgili detaylı bilgi için şu makaleden faydanlanabilirsiniz.
-     * https://medium.com/bili%C5%9Fim-hareketi/json-web-tokens-jwt-nedir-4d10c7e692f4
      * Bu metod JWT Token'ı oluşturmaktadır.
      *
      * @param username
@@ -45,17 +35,15 @@ public class TokenManager {
         Burada token'ı kütüphane kullanmadan kendi metodlarımızı yazarak da oluşturabilirdik.
         Fakat daha sonrasında muhtemelen bakım, dökümantasyon ve okunabilirlik konularında güçlük yaşayacaktık.*/
 
-        String token = Jwts.builder() //Jwts factory tasarım kalıbını implemente eden bir sınıf. Factory tasarım kalıbı
+        return Jwts.builder() //Jwts factory tasarım kalıbını implemente eden bir sınıf. Factory tasarım kalıbı
                 //ile ilgili olarak https://github.com/yusufyilmazfr/tasarim-desenleri-turkce-kaynak/tree/master/factory/java
                 // adresinden örnek kodlara ulaşabilirsiniz.
-                .setSubject(username) //Tokenın payloadında bulunacak subject (bu token kim için oluşturuldu) alanın setlenmesi.
-                .setIssuer("burakgul.com.tr") //Issuer (oluşturan kurum kuruluş kişi) alanın setlenmesi.
-                .setIssuedAt(new Date(timeMillis)) //Oluşturulma zamanının setlenmesi.
-                .setExpiration(new Date(timeMillis + expireTime)) //Expire zamanının setlenmesi.
-                .signWith(SignatureAlgorithm.HS512, key) //Şifreleme algoritmasının ve tokenı encrypt (şifreleme)
-                // decrypt (şifre çözme) yapmasını sağlayacak gizli keyin setlenmesi.
-                .compact(); //Tokenı string'e çevirecek metod.
-        return token;
+                .subject(username)//Tokenın payloadında bulunacak subject (bu token kim için oluşturuldu) alanın setlenmesi.
+                .issuer("FinanceMobile")
+                .issuedAt(new Date(timeMillis))
+                .expiration(new Date(timeMillis + expireTime))
+                .signWith(key,HS512)
+                .compact();
     }
 
     /**
@@ -106,10 +94,10 @@ public class TokenManager {
      */
     public Claims parseToken(String token) {
         return Jwts.parser()
-                .setSigningKey(key)
+                .verifyWith(key)
                 .build()//Kullanıcıdan aldığımız tokenı parse etmek için secret keyimizi setliyoruz.
-                .parseClaimsJws(token) //Parse edilecek tokenı veriyoruz bu kısım bize Jws<Claims> dönecektir.
-                .getBody(); //Asıl kullanacağımız kısım olan body kısmını bu şekilde Claims nesnesi halinde almamızı sağlayacak.
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
 }

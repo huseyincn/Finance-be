@@ -1,12 +1,12 @@
-package com.huseyincan.financeportfolio.controller.rest;
+package com.huseyincan.financeportfolio.controller.rest.auth;
 
 import com.huseyincan.financeportfolio.dao.User;
 import com.huseyincan.financeportfolio.exception.EmailExistsException;
 import com.huseyincan.financeportfolio.controller.request.UserLoginRequest;
 import com.huseyincan.financeportfolio.controller.response.ErrorResponse;
 import com.huseyincan.financeportfolio.controller.response.LoginResponse;
-import com.huseyincan.financeportfolio.service.TokenManager;
-import com.huseyincan.financeportfolio.service.UserService;
+import com.huseyincan.financeportfolio.service.jwt.TokenManager;
+import com.huseyincan.financeportfolio.service.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

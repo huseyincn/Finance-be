@@ -1,4 +1,4 @@
-package com.huseyincan.financeportfolio.service;
+package com.huseyincan.financeportfolio.service.auth;
 
 import com.huseyincan.financeportfolio.dao.User;
 import com.huseyincan.financeportfolio.exception.EmailExistsException;
