@@ -1,0 +1,30 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@2.1.4
+jobs:
+  build-and-test-then-publish:
+    docker:
+      - image: cimg/openjdk:21.0.2
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: mvn -B -DskipTests clean package
+      - run:
+          name: Test
+          command: mvn test
+      - docker/install-docker-tools
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - run:
+          name: "Build and push Docker image"
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker build -t huseyincn/finance-be:latest .
+            docker push huseyincn/finance-be:latest
+
+workflows:
+  test-and-deploy:
+    jobs:
+      - build-and-test-then-publish
